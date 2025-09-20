@@ -1,0 +1,125 @@
+﻿@page "/playlists"
+@inject Orchestrator _orchestrator;
+<PageTitle>Your Playlists</PageTitle>
+
+<style>
+    .page-container {
+        background: linear-gradient(to bottom, #191414, #282828);
+        min-height: 100vh;
+        padding: 40px;
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        color: white;
+    }
+
+    .title {
+        font-size: 3em;
+        font-weight: bold;
+        color: #1DB954; /* Spotify Green */
+        margin-bottom: 10px;
+        text-align: center;
+    }
+
+    .nombreUsuario {
+        text-align: center;
+        margin-bottom: 40px;
+        color: #aaa;
+    }
+
+    /* Table Styling */
+    .playlists-table {
+        width: 100%;
+        max-width: 900px;
+        margin: 0 auto;
+        border-collapse: collapse;
+        background-color: #282828;
+        border-radius: 10px;
+        overflow: hidden; /* Ensures the border-radius is applied to the table */
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    }
+
+        .playlists-table thead tr {
+            background-color: #1DB954;
+            color: #ffffff;
+            text-align: left;
+        }
+
+        .playlists-table th, .playlists-table td {
+            padding: 15px 20px;
+        }
+
+        .playlists-table th {
+            font-weight: bold;
+            font-size: 1.1em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .playlists-table tbody tr {
+            border-bottom: 1px solid #333;
+            transition: background-color 0.3s ease;
+        }
+
+            .playlists-table tbody tr:last-of-type {
+                border-bottom: none;
+            }
+
+            .playlists-table tbody tr:hover {
+                background-color: #3a3a3a;
+                cursor: pointer;
+            }
+
+    /* Style for the "No playlists found" message */
+    .no-playlists-message {
+        text-align: center;
+        color: #888;
+        font-size: 1.2em;
+        padding: 50px;
+    }
+</style>
+
+<div class="page-container">
+    <h2 class="title">🎵 Playlists Manager</h2>
+    <p class="nombreUsuario">Bienvenido @nombreUsuario</p>
+
+    <table class="playlists-table">
+        <thead>
+            <tr>
+                <th>Playlist Name</th>
+                <th>Songs</th>
+                <th>Date Created</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (userPlaylists != null && userPlaylists.Any())
+            {
+                @foreach (var playlist in userPlaylists)
+                {
+                    <tr>
+                        <td>@playlist.name</td>
+                        <td>@playlist.getItemNumber()</td>
+                        <td>@playlist.DateCreated.ToString("yyyy-MM-dd")</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="3" class="no-playlists-message">
+                        No playlists found
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@code {
+    private string nombreUsuario;
+    private List<Playlist> userPlaylists;
+
+    protected override void OnInitialized()
+    {
+        nombreUsuario = _orchestrator.getCurrentUser().username;
+        userPlaylists = _orchestrator.getPlaylists(_orchestrator.getCurrentUser());
+    }
+}

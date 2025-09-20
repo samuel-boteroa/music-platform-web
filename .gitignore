@@ -1,0 +1,30 @@
+# IDE-specific files and folders
+.vs/
+.vscode/
+
+# Build artifacts
+[Bb]in/
+[Oo]bj/
+publish/
+
+# User-specific files
+*.user
+*.suo
+
+# Local configuration and secrets (IMPORTANT)
+appsettings.Development.json
+secrets.json
+app.config
+
+# NuGet packages folder
+[Pp]ackages/
+*.nupkg
+
+# Temporary files and logs
+*.log
+*.tmp
+*.DS_Store
+
+# Test results
+TestResults/
+*.trx

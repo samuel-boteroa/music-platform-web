@@ -1,0 +1,189 @@
+﻿@page "/register"
+@inject Orchestrator _orchestrator
+@inject NavigationManager _nav
+<PageTitle>register</PageTitle>
+
+<style>
+    .register-page-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 40px 0; /* Add some padding for scrolling on small screens */
+        min-height: 100vh;
+        background: linear-gradient(to bottom, #191414, #282828);
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+
+    .register-card {
+        background-color: #333;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        width: 100%;
+        max-width: 450px; /* A bit wider for the extra fields */
+        color: white;
+    }
+
+        .register-card h3 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            color: #1DB954; /* Spotify Green */
+        }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+    /* Style for Blazor's input components */
+    .form-control {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #555;
+        border-radius: 5px;
+        background-color: #444;
+        color: white;
+        font-size: 1em;
+        box-sizing: border-box;
+    }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #1DB954;
+            box-shadow: 0 0 5px #1DB954;
+        }
+
+        /* --- Validation Styling --- */
+        .form-control.invalid {
+            border-color: #dc3545; /* Red for invalid fields */
+        }
+
+    .validation-message {
+        color: #dc3545;
+        font-size: 0.9em;
+        margin-top: 5px;
+    }
+
+    .validation-summary {
+        color: #dc3545;
+        background-color: rgba(220, 53, 69, 0.1);
+        border: 1px solid #dc3545;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 20px;
+    }
+    /* --- End Validation Styling --- */
+
+    .submit-button {
+        width: 100%;
+        background-color: #1DB954;
+        color: white;
+        padding: 15px 30px;
+        text-decoration: none;
+        border-radius: 25px;
+        font-weight: bold;
+        border: none;
+        font-size: 1.1em;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        margin-top: 10px;
+    }
+
+        .submit-button:hover {
+            background-color: #1ED760;
+        }
+
+    .navigation-links {
+        text-align: center;
+        margin-top: 25px;
+    }
+
+        .navigation-links a {
+            color: #1DB954;
+            text-decoration: none;
+            margin: 0 10px;
+            transition: color 0.3s;
+        }
+
+            .navigation-links a:hover {
+                color: #1ED760;
+            }
+
+</style>
+
+<div class="register-page-container">
+    <div class="register-card">
+        <h3>Register</h3>
+
+        <EditForm Model="@userViewModel" OnValidSubmit="HandleFormSubmission">
+            <DataAnnotationsValidator />
+
+            <div class="validation-summary">
+                <ValidationSummary />
+            </div>
+
+            <div class="form-group">
+                <label for="Username">Username: </label>
+                <InputText id="Username" @bind-Value="userViewModel.Username" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label for="Email">Email: </label>
+                <InputText id="Email" @bind-Value="userViewModel.Email" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label for="Password">Password:</label>
+                <InputText type="password" id="Password" @bind-Value="userViewModel.Password" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label for="Birthday">Birthday: </label>
+                <InputDate id="Birthday" @bind-Value="userViewModel.Birthday" class="form-control" />
+            </div>
+
+            <button type="submit" class="submit-button">Register</button>
+        </EditForm>
+
+        <div class="navigation-links">
+            <NavLink href="/login">Already have an account?</NavLink>
+            <span>|</span>
+            <NavLink href="/">Back to Home</NavLink>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    RegistrationUserViewModel userViewModel = new();
+    string submission = null;
+    User? newUser;
+
+    protected override void OnInitialized()
+    {
+
+    }
+
+    public void HandleFormSubmission()
+    {
+        if (userViewModel.Birthday == null)
+        {
+            newUser = new User(userViewModel.Password, userViewModel.Email, userViewModel.Password);
+            _orchestrator.registerUser(newUser);
+        }
+        else
+        {
+            newUser = new User(userViewModel.Username, userViewModel.Email, userViewModel.Password,
+                userViewModel.Birthday);
+            _orchestrator.registerUser(newUser);
+
+        }
+        _nav.NavigateTo("/playlists");
+    }
+}
