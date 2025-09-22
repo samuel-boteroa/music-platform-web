@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-namespace MusicPlatform.ViewModels
+namespace MusicPlatformWeb.ViewModels
 {
     public class RegistrationUserViewModel
     {

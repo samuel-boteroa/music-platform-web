@@ -1,7 +1,7 @@
 ﻿using MusicClasses;
 using MusicClasses.Interfaces;
 using System.Security.Cryptography.X509Certificates;
-namespace MusicPlatform.Services
+namespace MusicPlatformWeb.Services
 {
     public class MusicDataService: IMusicDataService
     {

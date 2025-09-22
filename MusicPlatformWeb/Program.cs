@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MusicClasses;
-using MusicPlatform.Services;
+using MusicPlatformWeb.Services;
 using MusicClasses.Interfaces;
 
 namespace MusicPlatformWeb

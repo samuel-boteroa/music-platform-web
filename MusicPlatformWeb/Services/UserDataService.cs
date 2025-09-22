@@ -1,7 +1,7 @@
 ﻿using MusicClasses;
 using MusicClasses.Interfaces;
 
-namespace MusicPlatform.Services
+namespace MusicPlatformWeb.Services
 {
     public class UserDataService: IUserDataService
     {

@@ -1,4 +1,4 @@
-﻿namespace MusicPlatform.ViewModels
+﻿namespace MusicPlatformWeb.ViewModels
 {
     public class LoginUserViewModel
     {
