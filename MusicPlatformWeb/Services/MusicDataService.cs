@@ -1,9 +1,11 @@
 ﻿using MusicClasses;
 using MusicClasses.Interfaces;
-using System.Security.Cryptography.X509Certificates;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
 namespace MusicPlatformWeb.Services
 {
-    public class MusicDataService: IMusicDataService
+    public class MusicDataService : IMusicDataService
     {
         private readonly Dictionary<Guid, List<Playlist>> programPlaylists;
 
@@ -24,14 +26,15 @@ namespace MusicPlatformWeb.Services
             };
         }
 
-        public List<Playlist> getUserPlaylists(User user)
+        // Método asíncrono con PascalCase
+        public async Task<List<Playlist>> GetUserPlaylistsAsync(User user)
         {
             if (programPlaylists.TryGetValue(user.id, out var playlists))
             {
-                return playlists;
+                return await Task.FromResult(playlists);
             }
 
-            return new List<Playlist>();
+            return await Task.FromResult(new List<Playlist>());
         }
     }
 }
