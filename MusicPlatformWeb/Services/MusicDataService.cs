@@ -1,40 +1,40 @@
-﻿using MusicClasses;
+using MusicClasses;
 using MusicClasses.Interfaces;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace MusicPlatformWeb.Services
 {
     public class MusicDataService : IMusicDataService
     {
-        private readonly Dictionary<Guid, List<Playlist>> programPlaylists;
+        private readonly Dictionary<int, List<Playlist>> programPlaylists;
 
         public MusicDataService()
         {
-            var dummyId = new Guid("11223344-5566-7788-99aa-bbccddeeff00");
+            programPlaylists = new Dictionary<int, List<Playlist>>();
 
-            var playlists = new List<Playlist>
+            // Usuario ficticio con ID = 1
+            programPlaylists[1] = new List<Playlist>
             {
-                new Playlist("Suavemente"),
-                new Playlist("Esquelefacina"),
-                new Playlist("Perreo")
-            };
-
-            programPlaylists = new Dictionary<Guid, List<Playlist>>
-            {
-                { dummyId, playlists }
+                new Playlist { Name = "Suavemente", Description = "Clásicos de merengue" },
+                new Playlist { Name = "Esquelefacina", Description = "Lo mejor del perreo" }
             };
         }
 
-        // Método asíncrono con PascalCase
-        public async Task<List<Playlist>> GetUserPlaylistsAsync(User user)
+        public async Task<List<Playlist>> GetUserPlaylistsAsync(int userId)
         {
-            if (programPlaylists.TryGetValue(user.id, out var playlists))
-            {
+            if (programPlaylists.TryGetValue(userId, out var playlists))
                 return await Task.FromResult(playlists);
-            }
 
-            return await Task.FromResult(new List<Playlist>());
+            return new List<Playlist>();
+        }
+
+        public async Task AddPlaylistAsync(int userId, Playlist newPlaylist)
+        {
+            if (!programPlaylists.ContainsKey(userId))
+                programPlaylists[userId] = new List<Playlist>();
+
+            programPlaylists[userId].Add(newPlaylist);
+            await Task.CompletedTask;
         }
     }
 }
+
