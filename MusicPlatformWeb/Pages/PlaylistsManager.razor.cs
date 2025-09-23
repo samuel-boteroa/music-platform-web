@@ -6,32 +6,45 @@ namespace MusicPlatformWeb.Pages
 {
     public partial class PlaylistsManager
     {
-        [Inject] private IUserDataService UserDataService { get; set; } = default!;
-        [Inject] private IMusicDataService MusicDataService { get; set; } = default!;
+        [Inject]
+        private IMusicDataService MusicDataService { get; set; } = default!;
 
-        private string nombreUsuario = string.Empty;
+        [Inject]
+        private IUserDataService UserDataService { get; set; } = default!;
+
         private List<Playlist> userPlaylists = new();
         private User? currentUser;
 
+        private Playlist newPlaylist = new Playlist();
+
         protected override async Task OnInitializedAsync()
         {
-            // 1. Obtener el usuario actual (o de prueba si no existe)
-            currentUser = UserDataService.GetCurrentUser();
-            if (currentUser == null)
-            {
-                currentUser = UserDataService.GetTestUser();
-                UserDataService.SetCurrentUser(currentUser);
-            }
+            // Obtener usuario actual (simulado)
+            currentUser = await UserDataService.GetUserByUsernameAsync("demo") 
+                          ?? new User { Id = 1, UserName = "demo" };
 
-            nombreUsuario = currentUser?.username ?? "Invitado";
+            userPlaylists = await MusicDataService.GetUserPlaylistsAsync(currentUser.Id);
+        }
 
-            // 2. Cargar playlists del usuario
-            if (currentUser != null)
+        private async Task CreatePlaylist()
+        {
+            if (currentUser != null && !string.IsNullOrWhiteSpace(newPlaylist.Name))
             {
-                userPlaylists = await MusicDataService.GetUserPlaylistsAsync(currentUser);
+                await MusicDataService.AddPlaylistAsync(currentUser.Id, new Playlist
+                {
+                    Name = newPlaylist.Name,
+                    Description = newPlaylist.Description
+                });
+
+                // Refrescar lista
+                userPlaylists = await MusicDataService.GetUserPlaylistsAsync(currentUser.Id);
+
+                // Limpiar formulario
+                newPlaylist = new Playlist();
             }
         }
     }
 }
+
 
  
