@@ -1,6 +1,6 @@
 @page "/playlists"
 
-<h3>Playlists de @nombreUsuario</h3>
+<h3>Mis Playlists</h3>
 
 @if (userPlaylists == null)
 {
@@ -32,4 +32,20 @@ else
         </tbody>
     </table>
 }
+
+<hr />
+
+<h4>Crear Nueva Playlist</h4>
+<EditForm Model="@newPlaylist" OnValidSubmit="@CreatePlaylist">
+    <DataAnnotationsValidator />
+    <div class="mb-3">
+        <label>Nombre:</label>
+        <InputText class="form-control" @bind-Value="newPlaylist.Name" />
+    </div>
+    <div class="mb-3">
+        <label>Descripción:</label>
+        <InputText class="form-control" @bind-Value="newPlaylist.Description" />
+    </div>
+    <button type="submit" class="btn btn-success">Crear Playlist</button>
+</EditForm>
 
