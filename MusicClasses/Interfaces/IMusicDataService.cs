@@ -1,11 +1,15 @@
-using MusicClasses;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace MusicClasses.Interfaces
 {
     public interface IMusicDataService
     {
-        Task<List<Playlist>> GetUserPlaylistsAsync(int userId);
-        Task AddPlaylistAsync(int userId, Playlist newPlaylist);
+        public List<Playlist>? getUserPlaylists(User user);
+
+
     }
 }
-
