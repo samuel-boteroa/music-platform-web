@@ -18,7 +18,9 @@ namespace MusicClasses
         {
 
             this._userDataService = userDataService;
+
             this._musicDataService = musicDataService;
+
         }
 
 
@@ -37,10 +39,12 @@ namespace MusicClasses
             return informationValidity;
         }
 
+
+
         public void registerUser(User newUser)
         {
             this._userDataService.RegisterUser(newUser);
-            this.setCurrentUser(newUser);
+            // Do not auto-login on registration
         }
 
 
@@ -49,10 +53,24 @@ namespace MusicClasses
             this.currentUser = currentUser;
         }
 
-        public User getCurrentUser() 
+        public User getCurrentUser()
         {
             return this.currentUser;
-        
+
+        }
+
+        public void addNewPlaylist(Playlist newPlaylist)
+        {
+            _musicDataService.addNewPlaylist(currentUser.id, newPlaylist);
+        }
+
+        public void DeletePlaylist(Playlist playlist)
+        {
+            
+            if (currentUser != null)
+            {
+                _musicDataService.deletePlaylist(currentUser.id, playlist);
+            }
         }
     }
 }

@@ -11,6 +11,8 @@ namespace MusicClasses.Interfaces
         public User validateUserInformation(string username, string password);
 
         public void RegisterUser(User newUser);
+
+        
        
     }
 }

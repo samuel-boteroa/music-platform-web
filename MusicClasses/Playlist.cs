@@ -16,9 +16,9 @@ namespace MusicClasses
 
 
         public Playlist(string playlistName) { 
-        
-            this.id = Guid.NewGuid();   
-            this.DateCreated = new DateOnly();
+
+            this.id = Guid.NewGuid();
+            this.DateCreated = DateOnly.FromDateTime(DateTime.Now);
             this.name = playlistName;
             this.items = new List<PlaylistItem>();
         }

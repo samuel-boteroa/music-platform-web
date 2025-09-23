@@ -1,74 +1,93 @@
-@page "/player"
+@page "/player/{playlistId:guid}"
 @using MusicClasses
-@inject IMusicDataService _musicService
+@using Microsoft.AspNetCore.Components
+@inject Orchestrator _orchestrator
 
-<div class="player-container card shadow-lg">
-    <div class="card-body text-center">
+<div class="player-container">
+    <div class="login-card">
         <h3 class="mb-3">🎵 Music Player</h3>
 
-        <h5>@currentSong?.Title ?? "No song playing"</h5>
-        <p class="text-muted">@currentSong?.Artist</p>
+        <h5>@(currentSong?.name ?? "No song selected")</h5>
+        <p class="muted">@currentPlaylistName</p>
 
-        <div class="controls d-flex justify-content-center my-3">
-            <button class="btn btn-outline-primary mx-2" @onclick="PreviousSong">⏮️</button>
-            <button class="btn btn-primary mx-2" @onclick="TogglePlay">
-                @(isPlaying ? "⏸️ Pause" : "▶️ Play")
-            </button>
-            <button class="btn btn-outline-primary mx-2" @onclick="NextSong">⏭️</button>
+        <div class="center" style="gap: 8px; margin: 12px 0;">
+            <button class="button-outline" @onclick="PreviousSong">⏮️</button>
+            <button class="submit-button" @onclick="TogglePlay">@(isPlaying ? "⏸️ Pause" : "▶️ Play")</button>
+            <button class="button-outline" @onclick="NextSong">⏭️</button>
         </div>
 
-        <input type="range" class="form-range w-100" min="0" max="@currentSong?.Duration" 
-               value="@currentTime" @oninput="OnSeek" />
-
-        <p>@FormatTime(currentTime) / @FormatTime(currentSong?.Duration ?? 0)</p>
+        @if (playlistItems?.Count > 0)
+        {
+            <ul class="stack-sm">
+                @foreach (var item in playlistItems.Select((pi, idx) => new { pi, idx }))
+                {
+                    <li>
+                        <button class="button-ghost" @onclick="() => SelectIndex(item.idx)">@item.pi.song.name</button>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p class="muted">No songs available for this playlist.</p>
+        }
     </div>
+    
 </div>
 
 @code {
-    private List<Song> playlist = new();
+    [Parameter] public Guid? playlistId { get; set; }
+    private List<PlaylistItem> playlistItems = new();
     private Song? currentSong;
-    private bool isPlaying = false;
-    private int currentIndex = 0;
-    private int currentTime = 0;
+    private bool isPlaying;
+    private int currentIndex;
+    private string? currentPlaylistName;
 
     protected override void OnInitialized()
     {
-        // Simulamos obtener canciones de un usuario (dummy)
-        var user = new User("Tatiana");
-        var userPlaylists = _musicService.getUserPlaylists(user);
-
-        if (userPlaylists.Any() && userPlaylists.First().Songs.Any())
+        var user = _orchestrator.getCurrentUser();
+        if (user == null || !playlistId.HasValue)
         {
-            playlist = userPlaylists.First().Songs;
-            currentSong = playlist.First();
+            return;
+        }
+
+        var playlists = _orchestrator.getPlaylists(user);
+        var target = playlists.FirstOrDefault(p => p.id == playlistId.Value);
+        if (target != null)
+        {
+            currentPlaylistName = target.name;
+            playlistItems = target.getItems();
+            if (playlistItems.Count > 0)
+            {
+                currentIndex = 0;
+                currentSong = playlistItems[0].song;
+            }
         }
     }
 
-    private void TogglePlay() => isPlaying = !isPlaying;
+    private void TogglePlay()
+    {
+        isPlaying = !isPlaying;
+    }
 
     private void PreviousSong()
     {
-        if (playlist.Count == 0) return;
-        currentIndex = (currentIndex - 1 + playlist.Count) % playlist.Count;
-        currentSong = playlist[currentIndex];
-        currentTime = 0;
+        if (playlistItems.Count == 0) return;
+        currentIndex = (currentIndex - 1 + playlistItems.Count) % playlistItems.Count;
+        currentSong = playlistItems[currentIndex].song;
     }
 
     private void NextSong()
     {
-        if (playlist.Count == 0) return;
-        currentIndex = (currentIndex + 1) % playlist.Count;
-        currentSong = playlist[currentIndex];
-        currentTime = 0;
+        if (playlistItems.Count == 0) return;
+        currentIndex = (currentIndex + 1) % playlistItems.Count;
+        currentSong = playlistItems[currentIndex].song;
     }
 
-    private void OnSeek(ChangeEventArgs e)
+    private void SelectIndex(int index)
     {
-        if (int.TryParse(e.Value?.ToString(), out int newTime))
-        {
-            currentTime = newTime;
-        }
+        if (index < 0 || index >= playlistItems.Count) return;
+        currentIndex = index;
+        currentSong = playlistItems[currentIndex].song;
     }
-
-    private string FormatTime(int seconds) => $"{seconds / 60}:{seconds % 60:D2}";
 }

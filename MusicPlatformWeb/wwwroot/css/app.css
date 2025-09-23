@@ -440,6 +440,23 @@ body, .page {
     margin: 18px auto 0 auto;
 }
 
+/* Register page link styles and spacing */
+.register-card .navigation-links {
+    margin-top: 20px; /* increase spacing from the register button */
+    text-align: center;
+}
+
+.register-card .navigation-links a,
+.register-card .navigation-links .nav-link-style {
+    color: var(--text-secondary); /* subtle color */
+    text-decoration: none;
+}
+
+.register-card .navigation-links a:hover,
+.register-card .navigation-links .nav-link-style:hover {
+    color: var(--brand-green); /* on hover, match theme accent */
+}
+
 .form-control {
     width: 100%;
     padding: 12px 14px;
@@ -602,6 +619,82 @@ body, .page {
     }
 }
 
+/* Center the Add Playlist CTA button */
+#add-playlist-btn {
+    display: block;
+    margin: 16px auto;
+}
+
+/* ===== Table row actions ===== */
+.delete-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: #dc3545; /* danger red, consistent with validation color */
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+}
+
+.delete-btn::before {
+    content: "✕";
+    font-size: 18px;
+    line-height: 1;
+}
+
+.delete-btn:hover {
+    background: rgba(220, 53, 69, 0.12);
+    box-shadow: var(--shadow-md);
+}
+
+.delete-btn:active {
+    transform: translateY(1px);
+}
+
+.delete-btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(220,53,69,0.35);
+}
+
+/* Play button for playlists */
+.play-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--brand-green);
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+}
+
+.play-btn::before {
+    content: "▶";
+    font-size: 16px;
+    line-height: 1;
+}
+
+.play-btn:hover {
+    background: rgba(29,185,84,0.12);
+    box-shadow: var(--shadow-md);
+}
+
+.play-btn:active {
+    transform: translateY(1px);
+}
+
+.play-btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(29,185,84,0.35);
+}
+
 /* ===== Light Mode ===== */
 @media (prefers-color-scheme: light) {
     :root {
@@ -630,3 +723,4 @@ body, .page {
         color: var(--text-primary);
     }
 }
+

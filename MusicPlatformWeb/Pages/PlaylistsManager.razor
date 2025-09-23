@@ -1,5 +1,6 @@
 ﻿@page "/playlists"
-@inject Orchestrator _orchestrator;
+@inject Orchestrator _orchestrator
+@inject NavigationManager _nav
 <PageTitle>Your Playlists</PageTitle>
 
  
@@ -8,12 +9,34 @@
     <h2 class="title">🎵 Playlists Manager</h2>
     <p class="nombreUsuario">Bienvenido @nombreUsuario</p>
 
+    <button id="add-playlist-btn" class="cta-button" @onclick="showAddPlaylist">Agregar Playlist</button>
+
+    @if (addButtonOn)
+    {
+        <div class="register-card" style="margin: 24px auto;">
+            <h3>Crear nueva playlist</h3>
+            <EditForm Model="@addSongModel" OnValidSubmit="addNewPlaylist">
+                <DataAnnotationsValidator />
+                <ValidationSummary class="validation-summary" />
+
+                <div class="form-group">
+                    <label>Nombre de la playlist</label>
+                    <InputText class="form-control" @bind-Value="addSongModel.name" placeholder="Ingresa el nombre" />
+                </div>
+
+                <button type="submit" class="submit-button" title="Confirmar">✓</button>
+            </EditForm>
+        </div>
+    }
+
     <table class="playlists-table">
         <thead>
             <tr>
+                <th></th>
                 <th>Playlist Name</th>
                 <th>Songs</th>
                 <th>Date Created</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -22,16 +45,22 @@
                 @foreach (var playlist in userPlaylists)
                 {
                     <tr>
+                        <td>
+                            <button type="button" class="play-btn" title="Reproducir" aria-label="Reproducir" @onclick="() => GoToPlaylist(playlist)"></button>
+                        </td>
                         <td>@playlist.name</td>
                         <td>@playlist.getItemNumber()</td>
                         <td>@playlist.DateCreated.ToString("yyyy-MM-dd")</td>
+                        <td>
+                            <button type="button" class="delete-btn" title="Eliminar" aria-label="Eliminar" @onclick="() => DeletePlaylist(playlist)"></button>
+                        </td>
                     </tr>
                 }
             }
             else
             {
                 <tr>
-                    <td colspan="3" class="no-playlists-message">
+                    <td colspan="5" class="no-playlists-message">
                         No playlists found
                     </td>
                 </tr>
@@ -40,19 +69,4 @@
     </table>
 </div>
 
-<hr />
-
-<h4>Crear Nueva Playlist</h4>
-<EditForm Model="@newPlaylist" OnValidSubmit="@CreatePlaylist">
-    <DataAnnotationsValidator />
-    <div class="mb-3">
-        <label>Nombre:</label>
-        <InputText class="form-control" @bind-Value="newPlaylist.Name" />
-    </div>
-    <div class="mb-3">
-        <label>Descripción:</label>
-        <InputText class="form-control" @bind-Value="newPlaylist.Description" />
-    </div>
-    <button type="submit" class="btn btn-success">Crear Playlist</button>
-</EditForm>
 

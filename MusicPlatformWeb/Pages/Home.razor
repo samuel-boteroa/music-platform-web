@@ -2,6 +2,7 @@
 
 <PageTitle>Music Platform</PageTitle>
 
+@inject NavigationManager NavManager
  
 
 <div class="page">
@@ -9,8 +10,8 @@
         <h1>Welcome to Your New Sound</h1>
         <p>Discover, stream, and share a constantly expanding mix of music from emerging and major artists around the world.</p>
         <div>
-            <button class="cta-button"><NavLink class="nav-link-style" href="/login">Login</NavLink></button>
-            <button class="cta-button"><NavLink class="nav-link-style" href="/register">Register</NavLink></button>
+            <button class="cta-button" type="button" @onclick="NavigateToLogin">Login</button>
+            <button class="cta-button" type="button" @onclick="NavigateToRegister">Register</button>
         </div>
     </div>
 
@@ -55,8 +56,20 @@
     <div class="final-cta-section">
         <h2>Ready to Start Listening?</h2>
         <div>
-            <button class="cta-button"><NavLink class="nav-link-style" href="/login">Login</NavLink></button>
-            <button class="cta-button"><NavLink class="nav-link-style" href="/register">Register</NavLink></button>
+            <button class="cta-button" type="button" @onclick="NavigateToLogin">Login</button>
+            <button class="cta-button" type="button" @onclick="NavigateToRegister">Register</button>
         </div>
     </div>
-</div>
+}</div>
+
+@code {
+    private void NavigateToLogin()
+    {
+        NavManager.NavigateTo("/login");
+    }
+
+    private void NavigateToRegister()
+    {
+        NavManager.NavigateTo("/register");
+    }
+}

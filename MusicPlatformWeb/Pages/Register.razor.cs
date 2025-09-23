@@ -13,7 +13,8 @@ namespace MusicPlatformWeb.Pages
         {
             if (userViewModel.Birthday == null)
             {
-                newUser = new User(userViewModel.Password, userViewModel.Email, userViewModel.Password);
+                // Username must be used as the first parameter, not Password
+                newUser = new User(userViewModel.Username, userViewModel.Email, userViewModel.Password);
                 _orchestrator.registerUser(newUser);
             }
             else
@@ -23,7 +24,8 @@ namespace MusicPlatformWeb.Pages
                 _orchestrator.registerUser(newUser);
 
             }
-            _nav.NavigateTo("/playlists");
+            // After registration, send the user to login instead of auto-logging in
+            _nav.NavigateTo("/login");
         }
 
     }
