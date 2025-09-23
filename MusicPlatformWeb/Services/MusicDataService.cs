@@ -3,7 +3,7 @@ using MusicClasses.Interfaces;
 
 namespace MusicPlatformWeb.Services
 {
-    public class MusicDataService: IMusicDataService
+    public class MusicDataService : IMusicDataService
     {
         private readonly Dictionary<int, List<Playlist>> programPlaylists;
 
@@ -27,14 +27,14 @@ namespace MusicPlatformWeb.Services
             return new List<Playlist>();
         }
 
-        public List<Playlist> getUserPlaylists(User user)
+        public async Task AddPlaylistAsync(int userId, Playlist newPlaylist)
         {
-            if (programPlaylists.TryGetValue(user.id, out var playlists))
-            {
-                return playlists;
-            }
+            if (!programPlaylists.ContainsKey(userId))
+                programPlaylists[userId] = new List<Playlist>();
 
-            return new List<Playlist>();
+            programPlaylists[userId].Add(newPlaylist);
+            await Task.CompletedTask;
         }
     }
 }
+
