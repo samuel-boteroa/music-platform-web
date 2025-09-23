@@ -27,8 +27,9 @@
             <ul class="queue stack-sm">
                 @foreach (var item in playlistItems.Select((pi, idx) => new { pi, idx }))
                 {
+                    var isActive = item.idx == currentIndex;
                     <li>
-                        <button class="queue-item" @onclick="() => SelectIndex(item.idx)">@item.pi.song.name</button>
+                        <button class="queue-item @(isActive ? "active" : null)" @onclick="() => SelectIndex(item.idx)">@item.pi.song.name</button>
                     </li>
                 }
             </ul>
