@@ -1,37 +1,44 @@
-@page "/playlists"
+﻿@page "/playlists"
+@inject Orchestrator _orchestrator;
+<PageTitle>Your Playlists</PageTitle>
 
-<h3>Mis Playlists</h3>
+ 
 
-@if (userPlaylists == null)
-{
-    <p><em>Cargando playlists...</em></p>
-}
-else if (!userPlaylists.Any())
-{
-    <p>No tienes ninguna playlist todavía. ¡Crea una!</p>
-}
-else
-{
-    <table class="table">
+<div class="page-container">
+    <h2 class="title">🎵 Playlists Manager</h2>
+    <p class="nombreUsuario">Bienvenido @nombreUsuario</p>
+
+    <table class="playlists-table">
         <thead>
             <tr>
-                <th>Nombre de la Playlist</th>
-                <th>Descripción</th>
-                <th>Canciones</th>
+                <th>Playlist Name</th>
+                <th>Songs</th>
+                <th>Date Created</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var playlist in userPlaylists)
+            @if (userPlaylists != null && userPlaylists.Any())
+            {
+                @foreach (var playlist in userPlaylists)
+                {
+                    <tr>
+                        <td>@playlist.name</td>
+                        <td>@playlist.getItemNumber()</td>
+                        <td>@playlist.DateCreated.ToString("yyyy-MM-dd")</td>
+                    </tr>
+                }
+            }
+            else
             {
                 <tr>
-                    <td>@playlist.Name</td>
-                    <td>@playlist.Description</td>
-                    <td>@(playlist.Items?.Count ?? 0)</td>
+                    <td colspan="3" class="no-playlists-message">
+                        No playlists found
+                    </td>
                 </tr>
             }
         </tbody>
     </table>
-}
+</div>
 
 <hr />
 
